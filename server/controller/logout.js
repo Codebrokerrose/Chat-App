@@ -3,6 +3,7 @@ async function logout(request, response) {
         const cookieOptions = {
             httpOnly: true, // Prevents client-side access
             secure: process.env.NODE_ENV === 'production', // Only secure in production
+            sameSite: 'none',
             expires: new Date(0) // Expire immediately
         };
 

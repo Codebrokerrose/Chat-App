@@ -50,7 +50,8 @@ async function checkPassword(request, response) {
 
         const cookieOptions = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none'
         };
 
         return response.cookie('token', token, cookieOptions).status(200).json({

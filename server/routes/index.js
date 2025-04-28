@@ -8,7 +8,11 @@ const updateUserDetails = require('../controller/updateUserDetails');
 const searchUser = require('../controller/searchUser');
 
 
+const anonSessionRoutes = require('./anonSession');
 const router = express.Router();
+
+// Anonymous session routes
+router.use(anonSessionRoutes);
 
 // Create user API
 router.post('/register', registerUser);

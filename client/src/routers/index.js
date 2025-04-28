@@ -7,6 +7,8 @@ import RegisterPage from '../pages/RegisterPage';
 import App from '../App';
 import AuthLayouts from '../layout/index';
 import ForgotPassword from '../pages/ForgotPassword';
+import AnonymousChatEntry from '../pages/AnonymousChatEntry';
+import AnonymousChatRoom from '../pages/AnonymousChatRoom';
 
 const router = createBrowserRouter([
     {
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
             {
                 path : "forgot-password",
                 element : <AuthLayouts><ForgotPassword /></AuthLayouts>
+            },
+            {
+                path: "anonymous",
+                element: <AuthLayouts><AnonymousChatEntry /></AuthLayouts>
+            },
+            {
+                path: "anon-chat/:sessionId",
+                element: <AnonymousChatRoom />
             },
             {
                 path : "",

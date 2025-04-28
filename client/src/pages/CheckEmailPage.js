@@ -90,6 +90,22 @@ const CheckEmailPage = () => {
             Let's Go
           </button>
 
+          <div className="text-center mt-3">
+            <button
+              type="button"
+              className="btn btn-outline-secondary w-100 fw-bold mb-2"
+              onClick={() => navigate('/anonymous')}
+            >
+              Try Anonymous Chat
+            </button>
+            <div>
+              <span>or </span>
+              <Link to="/anonymous" className="text-success text-decoration-underline">
+                Access Anonymous Chat
+              </Link>
+            </div>
+          </div>
+
           <p className="text-center mt-3">
             New User?
             <Link to="/register" className="text-primary text-decoration-none ms-1">
