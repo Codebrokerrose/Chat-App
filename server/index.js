@@ -5,9 +5,12 @@ require('dotenv').config();
 const connectDB = require('./config/connectDB');
 const router = require('./routes/index');
 const cookiesParser = require('cookie-parser');
-const {app, server} = require('./socket/index');
+const { app, server } = require('./socket/index');
+const path = require('path');
 
-// const app = express();
+const PORT = process.env.PORT || 8080; // 🛠️ moved to top
+
+// Middlewares
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true
@@ -16,19 +19,26 @@ app.use(cors({
 app.use(express.json());
 app.use(cookiesParser());
 
-const PORT = process.env.PORT || 8080; // default port to listen  
+// Serve static files (React build)
+app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.get('/', (request, response) => {
-    response.json({
-        message: 'server is up and running '+PORT
-    })
-});
-
-//Api end point
+// API endpoints
 app.use('/api', router);
 
-connectDB().then(() => {
+// Root endpoint
+app.get('/', (request, response) => {
+    response.json({
+        message: 'server is up and running ' + PORT
+    });
+});
 
+//  This must be after your API routes
+// Catch-all handler to serve React for any unknown route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
+
+connectDB().then(() => {
     server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
