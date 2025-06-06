@@ -121,7 +121,7 @@ const CheckEmailPage = () => {
             >
               Try Anonymous Chat
             </button>
-            <div>
+            {/* <div>
               <span>or </span>
               <Link
                 to="/anonymous"
@@ -129,7 +129,7 @@ const CheckEmailPage = () => {
               >
                 Access Anonymous Chat
               </Link>
-            </div>
+            </div> */}
           </div>
 
           <p className="text-center mt-3">
