@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
+
+
 const CheckEmailPage = () => {
   const [data, setData] = useState({ email: "" });
   const navigate = useNavigate();
@@ -25,9 +27,9 @@ const CheckEmailPage = () => {
 
       if (response.data.success) {
         setData({ email: "" });
-        navigate("/password",{
-          state : response?.data?.data //pass the user data
-      });
+        navigate("/password", {
+          state: response?.data?.data, //pass the user data
+        });
       } else {
         toast.error(response.data.message);
       }
@@ -42,15 +44,13 @@ const CheckEmailPage = () => {
       style={{
         backgroundImage:
           "url('https://media.istockphoto.com/id/1403848173/vector/vector-online-chatting-pattern-online-chatting-seamless-background.jpg?s=612x612&w=0&k=20&c=W3O15mtJiNlJuIgU6S9ZlnzM_yCE27eqwTCfXGYwCSo=')",
-        backgroundSize: "cover",
+        // backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        // backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
         height: "100vh",
       }}
     >
-      
-
       <div
         className="bg-white w-100"
         style={{
@@ -62,28 +62,51 @@ const CheckEmailPage = () => {
         }}
       >
         <div className="d-flex justify-content-center align-items-center mb-4">
-        <PiUserCircle 
-          size={80}
-        />
-      </div>
+          <PiUserCircle size={80} />
+        </div>
         <h3 className="mb-4 text-center">Welcome to Chat App!</h3>
 
         <form className="mx-2" onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Email:
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="form-control"
-              placeholder="Enter your email"
-              value={data.email}
-              onChange={handleOnChange}
-              required
-              style={{ backgroundColor: "whitesmoke" }}
-            />
+          <div>
+            <form 
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+              }} action="/reqOTP" method="POST" 
+            >
+              <input
+                type="email"
+                id="email otpField"
+                name="email"
+                className="form-control"
+                placeholder="Enter your email"
+                value={data.email}
+                onChange={handleOnChange}
+                required
+                style={{
+                  backgroundColor: "whitesmoke",
+                  flex: 1,
+                  paddingRight: "100px",
+                  marginBottom: "10px",
+                }}
+              />
+             
+            </form>
+          </div>
+
+          <div>
+            <form
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+              }} action="/verifyOTP" method="POST"
+            >
+              <input type="hidden" id="VerifyEmail" name="email" />
+              
+              
+            </form>
           </div>
 
           <button className="btn btn-primary w-100 py-2 fw-bold" type="submit">
@@ -94,13 +117,16 @@ const CheckEmailPage = () => {
             <button
               type="button"
               className="btn btn-outline-secondary w-100 fw-bold mb-2"
-              onClick={() => navigate('/anonymous')}
+              onClick={() => navigate("/anonymous")}
             >
               Try Anonymous Chat
             </button>
             <div>
               <span>or </span>
-              <Link to="/anonymous" className="text-success text-decoration-underline">
+              <Link
+                to="/anonymous"
+                className="text-success text-decoration-underline"
+              >
                 Access Anonymous Chat
               </Link>
             </div>
@@ -108,7 +134,10 @@ const CheckEmailPage = () => {
 
           <p className="text-center mt-3">
             New User?
-            <Link to="/register" className="text-primary text-decoration-none ms-1">
+            <Link
+              to="/register"
+              className="text-primary text-decoration-none ms-1"
+            >
               Register
             </Link>
           </p>
