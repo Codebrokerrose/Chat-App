@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -114,6 +115,13 @@ const ForgotPassword = () => {
           >
             Send Verification Code
           </motion.button>
+
+          <p className="text-center mt-3">
+            Remember?
+            <Link to="/email" className="text-primary ms-1">
+              Login
+            </Link>
+          </p>
 
           {/* Verification Code */}
           {codeSent && (
