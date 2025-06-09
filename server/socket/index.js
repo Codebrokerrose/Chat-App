@@ -1,16 +1,22 @@
 // socketServer.js
-const express = require('express');
-const { Server } = require('socket.io');
-const anonSocketHandler = require('./anonSocket');
-const http = require('http');
-const getUserDetailsFromToken = require('../helpers/getUserDetailsFromToken');
-const UserModel = require('../models/UserModel');
-const { ConversationModel, MessageModel } = require('../models/ConversationModel');
-const getConversation = require('../helpers/getConversation');
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const { setSocketIO } = require("../controller/anonSession");
+const anonSocketHandler = require("./anonSocket");
+
+const getUserDetailsFromToken = require("../helpers/getUserDetailsFromToken");
+const UserModel = require("../models/UserModel");
+const {
+  ConversationModel,
+  MessageModel,
+} = require("../models/ConversationModel");
+const getConversation = require("../helpers/getConversation");
 
 const app = express();
 const server = http.createServer(app);
 
+// Initialize Socket.IO
 const io = new Server(server, {
   cors: {
     origin: process.env.FRONTEND_URL,
@@ -20,39 +26,49 @@ const io = new Server(server, {
   pingInterval: 10000,
 });
 
+// ✅ Always set io (including for anonymous)
+setSocketIO(io);
+
 const onlineUsers = new Map();
 
-io.on('connection', async (socket) => {
-  const isAnonymous = socket.handshake.query.anonymous === 'true';
+io.on("connection", async (socket) => {
+  const isAnonymous = socket.handshake.query.anonymous === "true";
+
+  // ✅ If anonymous, handle separately and return
   if (isAnonymous) {
     anonSocketHandler(io, socket);
     return;
   }
+
   try {
     const token = socket.handshake.auth.token;
     if (!token) {
-      console.warn('Socket connection missing token');
+      console.warn("Socket connection missing token");
       return socket.disconnect(true);
     }
+
     const user = await getUserDetailsFromToken(token);
     if (!user?._id) {
-      console.warn('Socket connection invalid/expired token');
+      console.warn("Socket connection invalid/expired token");
       return socket.disconnect(true);
     }
 
     const userId = user._id.toString();
     onlineUsers.set(userId, socket.id);
     socket.join(userId);
-    io.emit('onlineUser', Array.from(onlineUsers.keys()));
+
+    io.emit("onlineUser", Array.from(onlineUsers.keys()));
 
     const conversation = await getConversation(userId);
-    socket.emit('conversation', conversation);
+    socket.emit("conversation", conversation);
 
-    socket.on('message-page', async (otherUserId) => {
-      const userDetails = await UserModel.findById(otherUserId).select('-password');
+    socket.on("message-page", async (otherUserId) => {
+      const userDetails = await UserModel.findById(otherUserId).select(
+        "-password"
+      );
       if (!userDetails) return;
 
-      socket.emit('message-user', {
+      socket.emit("message-user", {
         _id: userDetails._id,
         name: userDetails.name,
         email: userDetails.email,
@@ -65,12 +81,14 @@ io.on('connection', async (socket) => {
           { sender: userId, receiver: otherUserId },
           { sender: otherUserId, receiver: userId },
         ],
-      }).populate('messages').sort({ updatedAt: -1 });
+      })
+        .populate("messages")
+        .sort({ updatedAt: -1 });
 
-      socket.emit('message', conversationData?.messages || []);
+      socket.emit("message", conversationData?.messages || []);
     });
 
-    socket.on('new message', async (data) => {
+    socket.on("new message", async (data) => {
       let conversation = await ConversationModel.findOne({
         $or: [
           { sender: data.sender, receiver: data.receiver },
@@ -97,23 +115,25 @@ io.on('connection', async (socket) => {
         $push: { messages: savedMessage._id },
       });
 
-      const updatedConversation = await ConversationModel.findById(conversation._id)
-        .populate('messages')
+      const updatedConversation = await ConversationModel.findById(
+        conversation._id
+      )
+        .populate("messages")
         .sort({ updatedAt: -1 });
 
       [data.sender, data.receiver].forEach(async (uid) => {
-        io.to(uid).emit('message', updatedConversation?.messages || []);
+        io.to(uid).emit("message", updatedConversation?.messages || []);
         const conv = await getConversation(uid);
-        io.to(uid).emit('conversation', conv);
+        io.to(uid).emit("conversation", conv);
       });
     });
 
-    socket.on('sidebar', async (currentUserId) => {
+    socket.on("sidebar", async (currentUserId) => {
       const conversations = await getConversation(currentUserId);
-      socket.emit('conversation', conversations);
+      socket.emit("conversation", conversations);
     });
 
-    socket.on('seen', async (msgByUserId) => {
+    socket.on("seen", async (msgByUserId) => {
       const convo = await ConversationModel.findOne({
         $or: [
           { sender: userId, receiver: msgByUserId },
@@ -131,25 +151,25 @@ io.on('connection', async (socket) => {
       const updateForSender = await getConversation(userId);
       const updateForReceiver = await getConversation(msgByUserId);
 
-      io.to(userId).emit('conversation', updateForSender);
-      io.to(msgByUserId).emit('conversation', updateForReceiver);
+      io.to(userId).emit("conversation", updateForSender);
+      io.to(msgByUserId).emit("conversation", updateForReceiver);
     });
 
-    socket.on('manual-logout', () => {
+    socket.on("manual-logout", () => {
       onlineUsers.delete(userId);
       socket.leave(userId);
-      io.emit('onlineUser', Array.from(onlineUsers.keys()));
+      io.emit("onlineUser", Array.from(onlineUsers.keys()));
       socket.disconnect(true);
     });
 
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
       if (onlineUsers.get(userId) === socket.id) {
         onlineUsers.delete(userId);
-        io.emit('onlineUser', Array.from(onlineUsers.keys()));
+        io.emit("onlineUser", Array.from(onlineUsers.keys()));
       }
     });
   } catch (err) {
-    console.error('🔥 Socket error:', err.message);
+    console.error("🔥 Socket error:", err.message);
     socket.disconnect(true);
   }
 });

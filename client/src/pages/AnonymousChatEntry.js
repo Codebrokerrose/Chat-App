@@ -73,6 +73,10 @@ const AnonymousChatEntry = () => {
         }}
       >
         <h2 className="mb-4 fw-bold text-dark">🌱 Start Anonymous Chat</h2>
+        <p style={{ color: "blueviolet" , fontWeight: "bold" }}>
+          Session will get expire after 1 hour, so create a new
+          session
+        </p>
 
         {!inviteLink ? (
           <>

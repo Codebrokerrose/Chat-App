@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom"; // 🔧 added useNavigate
 import io from "socket.io-client";
 
 // Anonymous name list
@@ -39,6 +39,7 @@ function getRandomName(excludeName = "") {
 const AnonymousChatRoom = () => {
   const { sessionId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate(); // 🔧 added
 
   const savedNameKey = `anon-name-${sessionId}`;
 
@@ -68,12 +69,19 @@ const AnonymousChatRoom = () => {
     s.on("anon-message", (msg) => setMessages((prev) => [...prev, msg]));
     s.on("anon-history", (history) => setMessages(history));
 
+    // 🔔 handle expired session
+    s.on("anon-expired", () => {
+      alert("This session has expired. Please create a new one.");
+      navigate("/anonymous"); // 🔁 redirect user to entry page
+    });
+
     return () => {
       s.off("anon-message");
       s.off("anon-history");
+      s.off("anon-expired"); // 🔧 cleanup
       s.disconnect();
     };
-  }, [sessionId, username]);
+  }, [sessionId, username, navigate]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
