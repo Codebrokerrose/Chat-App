@@ -7,8 +7,8 @@ The app features real-time messaging, user authentication, profile management, a
 
 ## Deployed Applications
 
-- **Frontend (Vercel):** [Chat App Frontend](https://chat-app-front-dusky-three.vercel.app/)
-- **Backend (Render):** [Chat App Backend](https://chat-app-oeoa.onrender.com/)
+- **Frontend (Vercel):** [Chat App Frontend](https://chat-app-eddg.onrender.com)
+- **Backend (Render):** [Chat App Backend](https://chat-backend-p1hi.onrender.com)
 
 ---
 
