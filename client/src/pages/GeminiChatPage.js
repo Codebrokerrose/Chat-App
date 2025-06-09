@@ -30,7 +30,7 @@ function GeminiChatPage() {
 
   const [messages, setMessages] = useState([
     {
-      message: "Hello, I'm Gemini! How can I help you today?",
+      message: "Hello, I'm AI! How can I help you today?",
       direction: "incoming",
       sender: "Gemini",
     },
