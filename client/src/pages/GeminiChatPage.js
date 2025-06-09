@@ -50,13 +50,14 @@ function GeminiChatPage() {
     setIsTyping(true);
 
     try {
-      const res = await fetch("http://localhost:8080/api/chat", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ message }),
       });
+      
 
       const data = await res.json();
       setMessages([
