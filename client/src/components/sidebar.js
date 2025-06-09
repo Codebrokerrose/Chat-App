@@ -13,6 +13,8 @@ import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
 import logo from '../assets/images/favicon/ai.avif'
+import { Link } from 'react-router-dom';
+
 
 const Sidebar = () => {
     const user = useSelector(state => state?.user)
@@ -109,15 +111,20 @@ const Sidebar = () => {
           </div>
 
           <div className="d-flex ">
-            <img
-              src={logo}
-              alt="Logo"
-              width={30}
-              height={40}
-              style={{
-                borderRadius: "0.375rem",
-              }}
-            />
+            <Link to="/gemini-chat">
+              <img
+                src={logo}
+                alt="Logo"
+                width={30}
+                height={40}
+                style={{
+                  cursor: "pointer",
+                  mixBlendMode: "multiply",
+                  backgroundColor: "transparent",
+                  borderRadius: "0.375rem",
+                }}
+              />
+            </Link>
           </div>
         </div>
 

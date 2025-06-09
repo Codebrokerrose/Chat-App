@@ -2,52 +2,51 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-
 const connectDB = require("./config/connectDB");
-const router = require("./routes/index");
+const router = require("./routes/index"); // Main app routes
+const geminiChatRoutes = require("./routes/geminiChat"); // ✅ Gemini chat route
 const cookiesParser = require("cookie-parser");
 const { app, server } = require("./socket/index");
 const path = require("path");
 
-const PORT = process.env.PORT || 8080; // 🛠️ moved to top
+const PORT = process.env.PORT || 8080;
 
-
-// Middlewares
+// --- Middleware ---
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
-
 app.use(express.json());
 app.use(cookiesParser());
 
-// Serve static files (React build)
+// --- Static files ---
 app.use(express.static(path.join(__dirname, "../client/build")));
 
-// API endpoints
-app.use("/api", router);
+// --- API Routes ---
+app.use("/api", router); // existing routes
+app.use("/api", geminiChatRoutes); // ✅ add Gemini route
 
-// Root endpoint
+// --- Root Endpoint ---
 app.get("/", (request, response) => {
   response.json({
     message: "server is up and running " + PORT,
   });
 });
 
-//  This must be after your API routes
-// Catch-all handler to serve React for any unknown route
+// --- Catch-All (for React SPA) ---
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
+// --- Connect to DB and start server ---
 connectDB()
   .then(() => {
     server.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`✅ Server is running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.log("error", error);
+    console.log("❌ DB connection error:", error);
   });

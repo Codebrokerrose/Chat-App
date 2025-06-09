@@ -12,7 +12,9 @@ import ForgotPassword from "../pages/ForgotPassword";
 import AnonymousChatEntry from "../pages/AnonymousChatEntry";
 import AnonymousChatRoom from "../pages/AnonymousChatRoom";
 import MessagePage from "../components/MessagePage";
-import VerifyEmailPage from "../pages/VerifyEmailPage"; // You should have this file
+import VerifyEmailPage from "../pages/VerifyEmailPage";
+import GeminiChatPage from "../pages/GeminiChatPage";
+// You should have this file
 
 const router = createBrowserRouter([
   {
@@ -35,7 +37,6 @@ const router = createBrowserRouter([
           </AuthLayouts>
         ),
       },
-
       {
         path: "email",
         element: (
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
         element: <AnonymousChatRoom />,
       },
       {
+        path: "gemini-chat",
+        element: <GeminiChatPage />, 
+      },
+      {
         path: "",
         element: <Home />,
         children: [
@@ -85,5 +90,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 
 export default router;
