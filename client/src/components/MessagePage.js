@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import Avatar from './Avtar';
 import { HiDotsVertical } from 'react-icons/hi';
-import { FaAngleLeft, FaPlus, FaImage, FaVideo, FaTimes as Close } from 'react-icons/fa';
+import { FaAngleLeft, FaPlus, FaImage, FaVideo} from 'react-icons/fa';
 import uploadFile from '../helper/uploadFile';
 import Loading from './Loading';
 import backgroundImage from '../assets/images/photo.jpg';

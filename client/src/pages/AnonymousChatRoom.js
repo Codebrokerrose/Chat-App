@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import io from "socket.io-client";
 
@@ -101,14 +101,28 @@ const AnonymousChatRoom = () => {
       }}
     >
       <header
-        className="sticky-top bg-white"
-        style={{ height: "4rem", zIndex: 1 }}
+        className="sticky-top"
+        style={{
+          height: "4rem",
+          zIndex: 10,
+          background: "linear-gradient(to right,rgb(163, 195, 243), #6610f2)",
+          color: "white",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+        }}
       >
-        <div className="d-flex align-items-center gap-3 h-100 px-3">
-          <h3 className="mb-0 fw-bold text-primary">Anonymous Chat Room</h3>
-          <div className="ms-auto text-secondary small">
-            You are: <b>{username}</b>
-          </div>
+        <div className="d-flex align-items-center justify-content-between h-100 px-4">
+          <h4
+            className="mb-0 fw-semibold "
+            style={{ textShadow: "2px -2px blue" }}
+          >
+            Anonymous Chat Room
+          </h4>
+          <span
+            className="badge bg-light text-dark px-3 py-2 rounded-pill shadow-sm"
+            style={{ fontSize: "0.85rem" }}
+          >
+            You are: <strong>{username}</strong>
+          </span>
         </div>
       </header>
 
@@ -154,18 +168,26 @@ const AnonymousChatRoom = () => {
       </section>
 
       <form
-        className="d-flex p-3 bg-white"
-        style={{ borderTop: "1px solid #eee" }}
+        className="d-flex align-items-center gap-2 p-3 bg-white shadow-sm"
+        style={{
+          borderTop: "1px solid #eee",
+          position: "sticky",
+          bottom: 0,
+          zIndex: 5,
+        }}
         onSubmit={sendMessage}
       >
         <input
-          className="form-control me-2"
+          className="form-control rounded-pill px-4 py-2 shadow-sm"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
-          autoFocus
         />
-        <button className="btn btn-primary" type="submit">
+        <button
+          className="btn btn-primary rounded-pill px-4 py-2"
+          type="submit"
+          disabled={!input.trim()}
+        >
           Send
         </button>
       </form>

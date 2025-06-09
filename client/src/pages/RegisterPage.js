@@ -113,6 +113,7 @@ const RegisterPage = () => {
                 type="text"
                 id="name"
                 name="name"
+                placeholder="Enter your name"
                 className="form-control"
                 value={data.name}
                 onChange={handleOnChange}
@@ -129,6 +130,7 @@ const RegisterPage = () => {
                 id="email"
                 name="email"
                 className="form-control"
+                placeholder="Enter your email"
                 value={data.email}
                 onChange={handleOnChange}
                 required
@@ -144,6 +146,7 @@ const RegisterPage = () => {
                 id="password"
                 name="password"
                 className="form-control"
+                placeholder="Enter your password"
                 value={data.password}
                 onChange={handleOnChange}
                 required
