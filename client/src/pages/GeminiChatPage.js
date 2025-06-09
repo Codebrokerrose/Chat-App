@@ -14,6 +14,17 @@ import {
 import geminiAvatar from "../assets/images/favicon/ai.avif";
 import userAvatar from "../assets/images/avtar.jpg";
 
+// Utility function to strip markdown stars and apply clean formatting
+const formatResponse = (text) => {
+  return text
+    .replace(/\*\*\*(.*?)\*\*\*/g, "$1")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/^\s*[-*]\s+/gm, "• ")
+    .replace(/\n{3,}/g, "\n\n") // reduce multiple line breaks
+    .replace(/\n/g, "<br>"); // convert line breaks for HTML rendering
+};
+
 function GeminiChatPage() {
   const navigate = useNavigate();
 
@@ -51,7 +62,7 @@ function GeminiChatPage() {
       setMessages([
         ...updatedMessages,
         {
-          message: data.response,
+          message: formatResponse(data.response),
           sender: "Gemini",
           direction: "incoming",
         },
@@ -240,8 +251,21 @@ function GeminiChatPage() {
                     borderRadius: "12px",
                     padding: "8px 12px",
                     marginBottom: "8px",
+                    maxWidth: "100%",
+                    whiteSpace: "pre-wrap",
                   }}
-                />
+                >
+                  {msg.sender === "Gemini" ? (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: msg.message }}
+                      style={{ lineHeight: "1.6", fontSize: "0.95rem" }}
+                    />
+                  ) : (
+                    <div style={{ lineHeight: "1.6", fontSize: "0.95rem" }}>
+                      {msg.message}
+                    </div>
+                  )}
+                </Message>
               ))}
             </MessageList>
 
